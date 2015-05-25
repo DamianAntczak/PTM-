@@ -14,11 +14,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+  RTC_TimeTypeDef RTC_TimeStructure;
+  RTC_DateTypeDef RTC_DateStructure;
+
 void RTC_Configuration(void)
 {
     RTC_InitTypeDef RTC_InitStructure;
-  RTC_TimeTypeDef RTC_TimeStructure;
-  RTC_DateTypeDef RTC_DateStructure;
+
 
   /* Enable the PWR clock */
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
@@ -61,40 +63,13 @@ void RTC_Configuration(void)
   RTC_DateStructure.RTC_WeekDay = RTC_Weekday_Tuesday;
   RTC_SetDate(RTC_Format_BCD, &RTC_DateStructure);
 
-  RTC_TimeStructure.RTC_H12     = RTC_H12_AM;
-  RTC_TimeStructure.RTC_Hours   = 1;
-  RTC_TimeStructure.RTC_Minutes = 0;
+  //RTC_TimeStructure.RTC_H12     = RTC_H12_AM;
+  RTC_TimeStructure.RTC_Hours   = 13;
+  RTC_TimeStructure.RTC_Minutes = 40;
   RTC_TimeStructure.RTC_Seconds = 0;
-  RTC_SetTime(RTC_Format_BCD, &RTC_TimeStructure);
+  RTC_SetTime(RTC_Format_BIN, &RTC_TimeStructure);
 }
 
-void initRTC(){
-	/*** Clock Enable ***/
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE); // PWR clock must be enabled to access RTC and RTC backup registers
-
-	/*** Unlock RTC Registers ***/
-	PWR_BackupAccessCmd(ENABLE);     // Enable access to backup domain (RTC registers, RTC backup data registers, and backup SRAM)
-	RTC_WriteProtectionCmd(DISABLE); // Disable RTC register write protection
-
-	/*** RTC Enable ***/
-	RCC_LSEConfig(RCC_LSE_ON);              // Enable LSE (32.768 kHz low speed external) crystal
-	RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE); // Select LSE as RTC source
-	RCC_RTCCLKCmd(ENABLE);                  // Enable RTC
-
-
-
-	/*** RTC Configuration ***/
-	/* Internal Clock Frequency                       */
-	/* (F_RTCCLK) / ((PREDIV_A + 1) * (PREDIV_S + 1)) */
-	/* Example: 32768 Hz / (128 * 256) = 1 Hz         */
-	RTC_InitTypeDef RTC_InitStructure;
-	RTC_InitStructure.RTC_HourFormat = RTC_HourFormat_24;
-	RTC_InitStructure.RTC_AsynchPrediv = 127;
-	RTC_InitStructure.RTC_SynchPrediv = 255;
-	RTC_Init(&RTC_InitStructure);
-
-
-}
 
 void initUSART3(){
 
@@ -214,6 +189,19 @@ void initTIM2(){
 
 }
 
+void setTime(uint8_t hour, uint8_t min){
+
+	RTC_TimeStructure.RTC_Hours = hour;
+	RTC_TimeStructure.RTC_Minutes = min;
+	RTC_SetTime(RTC_Format_BIN,&RTC_TimeStructure);
+}
+
+void setDate(uint16_t year, uint8_t month, uint8_t date){
+	RTC_DateStructure.RTC_Year = year;
+	RTC_DateStructure.RTC_Month = month;
+	RTC_DateStructure.RTC_Date = date;
+	RTC_SetDate(RTC_Format_BIN,&RTC_DateStructure);
+}
 
 
 uint8_t impuls = 0;
@@ -271,12 +259,11 @@ int main(void)
 	initTIM2();
 	RTC_Configuration();
 	dhtTim3Init();
-	//initRTC();
 	//enableTimerInterrupt();
 
 
 
-
+	setTime(14,23);
 
 
 	usartPutString("Obrotomierz v1\r\n");
@@ -289,38 +276,41 @@ int main(void)
 	char buffer1[5];
 	char buffer2[5];
 	char buffer3[5];
+	char buffer4[10];
 
 
 	RTC_TimeTypeDef time;
-
-	dhtRead(&Rh,&Temp,&ChkSum);
+	RTC_DateTypeDef data;
+	//dhtRead(&Rh,&Temp,&ChkSum);
 
 	int k=0;
     while(1)
     {
     	//czytanie wartosci z poszeczegolnych peryferiow
 
-    	float czestotliwosc = getRPM(getFrequency(czasImpulsu));
+    	int czestotliwosc = getRPM(getFrequency(czasImpulsu));
     	RTC_GetTime(RTC_Format_BIN,&time);
-    	sprintf(buffer1,"%02d:%02d.%02d",time.RTC_Seconds,time.RTC_Minutes,time.RTC_Hours);
+    	RTC_GetDate(RTC_Format_BIN,&data);
+    	sprintf(buffer1,"%02d:%02d",time.RTC_Hours,time.RTC_Minutes);
     	sprintf(buffer3,"%d",Temp);
     	sprintf(buffer2,"%d",Rh);
+    	sprintf(buffer4,"%d %d",data.RTC_Year+2000, data.RTC_Month);
+
 
     	//wyswietlanie na terminalu
 
     	termClearScreen();
     	termLocate(2,5);
-    	usartPutFloat(czestotliwosc);
+    	usartPutInt(czestotliwosc);
     	termLocate(4,3);
-    	usartPutInt(10);
-    	//termLocate(6,1);
-    	//termLocate(1,0);
 
     	usartPutString(buffer1);
 		termLocate(5,0);
 		usartPutString(buffer3);
 		termLocate(5,5);
 		usartPutString(buffer2);
+		termLocate(6,0);
+		usartPutString(buffer4);
 
 
     	if(k>50000){
