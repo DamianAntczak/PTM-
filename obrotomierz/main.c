@@ -8,6 +8,9 @@
 #include "stm32f4xx_rtc.h"
 #include "stm32f4xx_pwr.h"
 
+#include "tm_lib/tm_stm32f4_hd44780.h"
+#include "tm_lib/tm_stm32f4_delay.h"
+
 #include "misc.h"
 #include "terminal.h"
 #include "dht11a.h"
@@ -57,9 +60,9 @@ void RTC_Configuration(void)
   RTC_Init(&RTC_InitStructure);
 
     /* Set the date: Tuesday April 1st 2014 */
-  RTC_DateStructure.RTC_Year = 0x14;
-  RTC_DateStructure.RTC_Month = RTC_Month_April;
-  RTC_DateStructure.RTC_Date = 0x01;
+  RTC_DateStructure.RTC_Year = 0x15;
+  RTC_DateStructure.RTC_Month = RTC_Month_May;
+  RTC_DateStructure.RTC_Date = 0x26;
   RTC_DateStructure.RTC_WeekDay = RTC_Weekday_Tuesday;
   RTC_SetDate(RTC_Format_BCD, &RTC_DateStructure);
 
@@ -258,12 +261,16 @@ int main(void)
 	Configure_PD0();
 	initTIM2();
 	RTC_Configuration();
-	dhtTim3Init();
+	dhtTim5Init();
+	TM_HD44780_Init(16, 2);
 	//enableTimerInterrupt();
 
+    TM_HD44780_Puts(0,0, "AutoControl v1");
+
+    Delayms(1000);
 
 
-	setTime(14,23);
+	setTime(13,40);
 
 
 	usartPutString("Obrotomierz v1\r\n");
@@ -277,6 +284,7 @@ int main(void)
 	char buffer2[5];
 	char buffer3[5];
 	char buffer4[10];
+	char buffer5[5];
 
 
 	RTC_TimeTypeDef time;
@@ -294,8 +302,18 @@ int main(void)
     	sprintf(buffer1,"%02d:%02d",time.RTC_Hours,time.RTC_Minutes);
     	sprintf(buffer3,"%d",Temp);
     	sprintf(buffer2,"%d",Rh);
-    	sprintf(buffer4,"%d %d",data.RTC_Year+2000, data.RTC_Month);
+    	sprintf(buffer4,"%d %d %d",data.RTC_Year+2000, data.RTC_Month,data.RTC_Date);
+    	sprintf(buffer5,"%d",czestotliwosc);
 
+    	TM_HD44780_Clear();
+    	TM_HD44780_Puts(0,0, buffer1);
+    	TM_HD44780_Puts(6,0, buffer4);
+    	if(czestotliwosc>0){
+    		TM_HD44780_Puts(0,1, buffer5);
+    		TM_HD44780_Puts(6,1, "RPM");
+    	}
+    	else
+    		TM_HD44780_Puts(0,1, "Engine stop");
 
     	//wyswietlanie na terminalu
 

@@ -3,7 +3,7 @@
 GPIO_InitTypeDef GPIO_InitStructure;
 TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 
-void dhtTim3Init(void){
+void dhtTim5Init(void){
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
 	TIM_TimeBaseStructure.TIM_Period = 84000000-1;
 	TIM_TimeBaseStructure.TIM_Prescaler = 84;

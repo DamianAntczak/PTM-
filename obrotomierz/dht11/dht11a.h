@@ -7,4 +7,4 @@ void dhtRead(u8 * rh, u8 * temp, u8 * checkSum);
 void dhtDelay(int us);
 void dhtGpioInInit(void);
 void dhtGpioOutInit(void);
-void dhtTim3Init(void);
+void dhtTim5Init(void);
