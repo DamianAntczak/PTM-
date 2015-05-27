@@ -73,6 +73,40 @@ void RTC_Configuration(void)
   RTC_SetTime(RTC_Format_BIN, &RTC_TimeStructure);
 }
 
+void initButton()
+{
+
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+
+	GPIO_InitTypeDef GPIO_Init_Str;
+	GPIO_Init_Str.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_Init_Str.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_Init_Str.GPIO_Pin = GPIO_Pin_0 ;
+	GPIO_Init_Str.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_Init(GPIOA,&GPIO_Init_Str);
+
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource0);
+
+	EXTI_InitTypeDef EXTI_InitStruct;
+	// PD0 is connected to EXTI_Line0
+	EXTI_InitStruct.EXTI_Line = EXTI_Line0;
+	EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+	EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+
+	EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
+
+	EXTI_Init(&EXTI_InitStruct);
+
+	NVIC_InitTypeDef NVIC_InitStruct;
+	NVIC_InitStruct.NVIC_IRQChannel = EXTI0_IRQn;
+	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
+	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x01;
+	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStruct);
+
+}
+
 
 void initUSART3(){
 
@@ -127,30 +161,30 @@ void initUSART3(){
 
 
 /* Configure pins to be interrupts */
-void Configure_PD0(void) {
+void Configure_PA1(void) {
     /* Set variables used */
     GPIO_InitTypeDef GPIO_InitStruct;
     EXTI_InitTypeDef EXTI_InitStruct;
     NVIC_InitTypeDef NVIC_InitStruct;
 
     /* Enable clock for GPIOD */
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
     /* Enable clock for SYSCFG */
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
     /* Set pin as input */
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_1;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_Init(GPIOD, &GPIO_InitStruct);
+    GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     /* Tell system that you will use PD0 for EXTI_Line0 */
-    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOD, EXTI_PinSource0);
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource1);
 
     /* PD0 is connected to EXTI_Line0 */
-    EXTI_InitStruct.EXTI_Line = EXTI_Line0;
+    EXTI_InitStruct.EXTI_Line = EXTI_Line1;
     /* Enable interrupt */
     EXTI_InitStruct.EXTI_LineCmd = ENABLE;
     /* Interrupt mode */
@@ -162,7 +196,7 @@ void Configure_PD0(void) {
 
     /* Add IRQ vector to NVIC */
     /* PD0 is connected to EXTI_Line0, which has EXTI0_IRQn vector */
-    NVIC_InitStruct.NVIC_IRQChannel = EXTI0_IRQn;
+    NVIC_InitStruct.NVIC_IRQChannel = EXTI1_IRQn;
     /* Set priority */
     NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
     /* Set sub priority */
@@ -214,9 +248,9 @@ int czasImpulsu = 0;
 
 /* Set interrupt handlers */
 /* Handle PD0 interrupt */
-void EXTI0_IRQHandler(void) {
+void EXTI1_IRQHandler(void) {
     /* Make sure that interrupt flag is set */
-    if (EXTI_GetITStatus(EXTI_Line0) != RESET) {
+    if (EXTI_GetITStatus(EXTI_Line1) != RESET) {
         /* Do your stuff when PD0 is changed */
 
     	if(nrZbocza==0){
@@ -230,11 +264,21 @@ void EXTI0_IRQHandler(void) {
     	}
 
         /* Clear interrupt flag */
+        EXTI_ClearITPendingBit(EXTI_Line1);
+    }
+}
+//obsluga przycisku
+
+void EXTI0_IRQHandler(void) {
+    /* Make sure that interrupt flag is set */
+    if (EXTI_GetITStatus(EXTI_Line0) != RESET) {
+        /* Do your stuff when PD0 is changed */
+
+
+        /* Clear interrupt flag */
         EXTI_ClearITPendingBit(EXTI_Line0);
     }
 }
-
-
 
 float getFrequency(int czasImpulsu){
 	float frequency = 64000/czasImpulsu;
@@ -258,7 +302,7 @@ int main(void)
 
 	SystemInit();
 	initUSART3();
-	Configure_PD0();
+	Configure_PA1();
 	initTIM2();
 	RTC_Configuration();
 	dhtTim5Init();
