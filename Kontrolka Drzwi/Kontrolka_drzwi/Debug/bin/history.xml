@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -g -nostartfiles -Map=Kontrolka_drzwi.map -O0 --gc-sections -LF:\CooCox\CoIDE\configuration\ProgramData\Kontrolka_drzwi -TF:\CooCox\CoIDE\configuration\ProgramData\Kontrolka_drzwi/arm-gcc-link.ld -g">
+      <target file="Kontrolka_drzwi.elf" lastModified="14daad21a80">
+         <source file="..\obj\stm32f4xx_syscfg.o" lastModified="14daad21475"/>
+         <source file="..\obj\startup_stm32f4xx.o" lastModified="14daad214b3"/>
+         <source file="..\obj\main.o" lastModified="14daad214f2"/>
+         <source file="..\obj\stm32f4xx_rcc.o" lastModified="14daad2158e"/>
+         <source file="..\obj\stm32f4xx_gpio.o" lastModified="14daad215fb"/>
+         <source file="..\obj\system_stm32f4xx.o" lastModified="14daad21659"/>
+         <source file="..\obj\IOToggle.o" lastModified="14daad217b1"/>
+         <source file="..\obj\stm32f4xx_exti.o" lastModified="14daad2181e"/>
+         <source file="..\obj\misc.o" lastModified="14daad2187c"/>
+      </target>
+   </processor>
+</history>

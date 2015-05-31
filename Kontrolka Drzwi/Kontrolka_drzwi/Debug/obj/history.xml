@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="arm-none-eabi-gcc noversion nomachine -mcpu=cortex-m4 -mthumb -Wall -ffunction-sections -g -O0 -c -DSTM32F407VG -DSTM32F4XX -DUSE_STDPERIPH_DRIVER -D__ASSEMBLY__ -IC:\Users\Kiler\Documents\ProjektPTM\Kontrolka Drzwi\cmsis -IC:\Users\Kiler\Documents\ProjektPTM -IC:\Users\Kiler\Documents\ProjektPTM\Kontrolka Drzwi -IC:\Users\Kiler\Documents\ProjektPTM\Kontrolka Drzwi\cmsis_lib -IC:\Users\Kiler\Documents\ProjektPTM\Kontrolka Drzwi\cmsis_boot -IC:\Users\Kiler\Documents\ProjektPTM\Kontrolka Drzwi\cmsis_lib\include">
+      <target file="stm32f4xx_gpio.o" lastModified="14daad215fb">
+         <source file="..\..\..\cmsis_lib\source\stm32f4xx_gpio.c" lastModified="14daab28c21"/>
+      </target>
+      <target file="system_stm32f4xx.o" lastModified="14daad21659">
+         <source file="..\..\..\cmsis_boot\system_stm32f4xx.c" lastModified="14daab26d95"/>
+      </target>
+      <target file="startup_stm32f4xx.o" lastModified="14daad214b3">
+         <source file="..\..\..\cmsis_boot\startup\startup_stm32f4xx.c" lastModified="14daab26d7e"/>
+      </target>
+      <target file="stm32f4xx_syscfg.o" lastModified="14daad21475">
+         <source file="..\..\..\cmsis_lib\source\stm32f4xx_syscfg.c" lastModified="14daab89abc"/>
+      </target>
+      <target file="stm32f4xx_exti.o" lastModified="14daad2181e">
+         <source file="..\..\..\cmsis_lib\source\stm32f4xx_exti.c" lastModified="14daab2a98b"/>
+      </target>
+      <target file="main.o" lastModified="14daad214f2">
+         <source file="..\..\..\main.c" lastModified="14daab6e942"/>
+      </target>
+      <target file="stm32f4xx_rcc.o" lastModified="14daad2158e">
+         <source file="..\..\..\cmsis_lib\source\stm32f4xx_rcc.c" lastModified="14daab26d78"/>
+      </target>
+      <target file="IOToggle.o" lastModified="14daad217b1">
+         <source file="..\..\..\example\IOToggle.c" lastModified="14daad21242"/>
+      </target>
+      <target file="misc.o" lastModified="14daad2187c">
+         <source file="..\..\..\cmsis_lib\source\misc.c" lastModified="14daab790be"/>
+      </target>
+   </processor>
+</history>
