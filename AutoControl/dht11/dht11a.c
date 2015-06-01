@@ -14,7 +14,7 @@ void dhtTim3Init(void){
 }
 void dhtGpioOutInit(void){
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD,ENABLE);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -22,7 +22,7 @@ void dhtGpioOutInit(void){
 }
 void dhtGpioInInit(void){
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD,ENABLE);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_Init(GPIOD,&GPIO_InitStructure);
 }
@@ -33,20 +33,20 @@ void dhtDelay(int us){
 void dhtRead(u8 * rh, u8 * temp, u8 * checkSum ){
 	u8 tmp,j,i,tab[5] = {0x00,0x00,0x00,0x00,0x00};
 	dhtGpioOutInit();
-	GPIO_ResetBits(GPIOD,GPIO_Pin_1);
+	GPIO_ResetBits(GPIOD,GPIO_Pin_7);
 	dhtDelay(18000);
-	GPIO_SetBits(GPIOD,GPIO_Pin_1);
+	GPIO_SetBits(GPIOD,GPIO_Pin_7);
 	dhtDelay(40);
 	dhtGpioInInit();
 
-	while(!GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_1));
-	while(GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_1));
+	while(!GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_7));
+	while(GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_7));
 
 	for (i = 0; i < 5; ++i) {
 		for (j = 0; j < 8; ++j) {
-			while(!GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_1));
+			while(!GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_7));
 			TIM_SetCounter(TIM3,0);
-			while(GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_1));
+			while(GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_7));
 			tmp = TIM_GetCounter(TIM3);
 			if(tmp<30){// trwanie sygna³u <30us-> 0; ok. 70us -> 1;
 				tab[i]=tab[i]<<1;

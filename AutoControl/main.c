@@ -11,7 +11,7 @@
 
 #include "DHT11/dht11a.h"
 
-enum Stan {Rozpoczecie,UstawianieGodziny, UstawianieMinuty,UstawianieRoku, UstawianieMiesiaca, UstawianieDnia, ZapisCzasu, Normalny, Obroty };
+enum Stan {Rozpoczecie,UstawianieGodziny, UstawianieMinuty,UstawianieRoku, UstawianieMiesiaca, UstawianieDnia, ZapisCzasu, Normalny, Obroty, Zdarzenie };
 uint8_t nrZbocza = 0;
 int czasImpulsu = 0;
 
@@ -39,6 +39,7 @@ void appendLayer(Ekran *e){
 
 typedef struct{
 	enum Stan aktualnyStan;
+	enum Stan ostatniStan;
 	uint16_t obroty;
 	uint8_t tempeIn, tempOut;
 	uint8_t humidity;
@@ -48,6 +49,7 @@ typedef struct{
     uint8_t hour, minute;
     uint16_t year;
     uint8_t month, date;
+    uint8_t leweDrzwi, praweDrzwi, bagaznik;
 }CarKomputer;
 
 CarKomputer komp;
@@ -116,7 +118,7 @@ void show(CarKomputer * komp){
 		TM_HD44780_Puts(6,0,buffer1);
 		TM_HD44780_Puts(1,1,bufferTempOut);
 		TM_HD44780_PutCustom(0,1,0);
-		TM_HD44780_PutCustom(7,1,1);
+		TM_HD44780_PutCustom(4,1,1);
 
 		break;
 	case Obroty:
@@ -125,6 +127,28 @@ void show(CarKomputer * komp){
 		for(i= 0; i < komp->obroty/1000 ;i++){
 			TM_HD44780_CursorSet(i,1);
 			TM_HD44780_Data(0xFF);
+		}
+		break;
+	case Zdarzenie:
+		TM_HD44780_PutCustom(0,0,2);
+		TM_HD44780_PutCustom(0,1,3);
+		TM_HD44780_PutCustom(1,0,4);
+		TM_HD44780_PutCustom(1,1,5);
+		if(komp->leweDrzwi == 1){
+			TM_HD44780_PutCustom(0,0,6);
+			TM_HD44780_PutCustom(0,1,7);
+			TM_HD44780_Puts(4,0,"Lewe");
+			TM_HD44780_Puts(4,1,"drzwi");
+		}
+		if(komp->praweDrzwi == 1){
+			//TM_HD44780_PutCustom(1,0,17);
+			//TM_HD44780_PutCustom(1,1,18);
+			TM_HD44780_Puts(4,0,"Prawe");
+			TM_HD44780_Puts(4,1,"drzwi");
+		}
+		if(komp->bagaznik == 1){
+			TM_HD44780_Puts(4,0,"Bagaznik");
+			TM_HD44780_Puts(4,1,"Otwarty");
 		}
 		break;
 	}
@@ -201,6 +225,9 @@ void EXTI0_IRQHandler(void) {
     		case Obroty:
     			komp.aktualnyStan = Normalny;
     			break;
+    		case Zdarzenie:
+    			komp.aktualnyStan = komp.ostatniStan;
+    			break;
     		}
 
         /* Clear interrupt flag */
@@ -249,6 +276,60 @@ void EXTI3_IRQHandler(void) {
 
 }
 
+//------------przerwania od drzwi i bagaznika
+
+void EXTI9_5_IRQHandler(void)
+{
+	if(EXTI_GetITStatus(EXTI_Line6) != RESET)
+    {
+		if(komp.leweDrzwi == 0){
+			komp.leweDrzwi=1;
+			komp.ostatniStan = komp.aktualnyStan;
+			komp.aktualnyStan = Zdarzenie;
+		}
+		else {
+			komp.leweDrzwi=0;
+			komp.aktualnyStan = komp.ostatniStan;
+		}
+
+		EXTI_ClearITPendingBit(EXTI_Line6);
+
+    }
+
+	if(EXTI_GetITStatus(EXTI_Line7) != RESET)
+    {
+		if(komp.praweDrzwi == 0){
+			komp.praweDrzwi=1;
+			komp.ostatniStan = komp.aktualnyStan;
+			komp.aktualnyStan = Zdarzenie;
+		}
+		else {
+			komp.praweDrzwi=0;
+			komp.aktualnyStan = komp.ostatniStan;
+		}
+
+		EXTI_ClearITPendingBit(EXTI_Line7);
+
+    }
+
+	if(EXTI_GetITStatus(EXTI_Line8) != RESET)
+    {
+		if(komp.bagaznik == 0){
+			komp.bagaznik=1;
+			komp.ostatniStan = komp.aktualnyStan;
+			komp.aktualnyStan = Zdarzenie;
+		}
+		else {
+			komp.bagaznik=0;
+			komp.aktualnyStan = komp.ostatniStan;
+		}
+
+		EXTI_ClearITPendingBit(EXTI_Line8);
+
+    }
+}
+
+
 
 
 int main(void)
@@ -257,6 +338,9 @@ int main(void)
 	Configure_PA1();
 	initButton();
 	initButtonPE3();
+	initButtonPC6();
+	initButtonPC7();
+	initButtonPC8();
 	RTC_Configuration();
 	initTIM2();
 	dhtTim3Init();
@@ -266,14 +350,21 @@ int main(void)
 
 	TM_HD44780_CreateChar(0,&charTermo[0]);
 	TM_HD44780_CreateChar(1,&charCelc[0]);
-
+	TM_HD44780_CreateChar(2,&carL0[0]);
+	TM_HD44780_CreateChar(3,&carL1[0]);
+	TM_HD44780_CreateChar(4,&carR0[0]);
+	TM_HD44780_CreateChar(5,&carR1[0]);
+	TM_HD44780_CreateChar(6,&carLeft0Open[0]);
+	TM_HD44780_CreateChar(7,&carLeft1Open[0]);
+	//TM_HD44780_CreateChar(17,&carR0Open[0]);
+	//TM_HD44780_CreateChar(18,&carR1Open[0]);
 
 	komp.aktualnyStan = Rozpoczecie;
 	show(&komp);
 	Delayms(500);
 	komp.aktualnyStan = UstawianieGodziny;
 
-	int i = 0;
+	int i = 500;
 	show(&komp);
     while(1)
     {
@@ -281,7 +372,7 @@ int main(void)
     	komp.obroty = getRPM(czasImpulsu);
     	RTC_GetDate(RTC_Format_BIN,&komp.data);
     	RTC_GetTime(RTC_Format_BIN,&komp.time);
-    	if(i>500000){
+    	if(i>500){
     		dhtRead(&komp.humidity,&komp.tempOut,&komp.ChkSum);
     		i=0;
     	}
