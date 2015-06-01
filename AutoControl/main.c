@@ -4,9 +4,12 @@
 #include "initPA1.h"
 #include "initButton.h"
 #include "initRTC.h"
+#include "customChar.h"
 
 #include "tm_lib/tm_stm32f4_delay.h"
 #include "tm_lib/tm_stm32f4_hd44780.h"
+
+#include "DHT11/dht11a.h"
 
 enum Stan {Rozpoczecie,UstawianieGodziny, UstawianieMinuty,UstawianieRoku, UstawianieMiesiaca, UstawianieDnia, ZapisCzasu, Normalny, Obroty };
 uint8_t nrZbocza = 0;
@@ -37,8 +40,9 @@ void appendLayer(Ekran *e){
 typedef struct{
 	enum Stan aktualnyStan;
 	uint16_t obroty;
-	int tempeIn, tempOut;
-	int humidity;
+	uint8_t tempeIn, tempOut;
+	uint8_t humidity;
+	uint8_t ChkSum;
     RTC_TimeTypeDef time;
     RTC_DateTypeDef data;
     uint8_t hour, minute;
@@ -63,10 +67,12 @@ void show(CarKomputer * komp){
 	char buffer4[10];
 	char buffer5[10];
 	char buffer6[10];
+	char bufferTempOut[5];
 	char logoBuf[16] = "AutoControl v1";
 	sprintf(buffer,"%d",komp->obroty);
 	sprintf(buffer1,"%d %d %d",komp->data.RTC_Year+2000, komp->data.RTC_Month,komp->data.RTC_Date);
 	sprintf(buffer2,"%02d:%02d",komp->time.RTC_Hours,komp->time.RTC_Minutes);
+	sprintf(bufferTempOut,"%d",komp->tempOut);
 
 	TM_HD44780_Clear();
 
@@ -88,7 +94,7 @@ void show(CarKomputer * komp){
 		TM_HD44780_Puts(0,0,buffer5);
 		break;
 	case ZapisCzasu:
-		TM_HD44780_Puts(0,0,"Ustawiono czas");
+		TM_HD44780_Puts(0,0,"Ustawiono date");
 		break;
 	case UstawianieRoku:
 		sprintf(buffer6,"%d %d %d",komp->year,komp->month,komp->date);
@@ -108,6 +114,10 @@ void show(CarKomputer * komp){
 	case Normalny:
 		TM_HD44780_Puts(0,0,buffer2);
 		TM_HD44780_Puts(6,0,buffer1);
+		TM_HD44780_Puts(1,1,bufferTempOut);
+		TM_HD44780_PutCustom(0,1,0);
+		TM_HD44780_PutCustom(7,1,1);
+
 		break;
 	case Obroty:
 		TM_HD44780_Puts(0,0,buffer);
@@ -249,9 +259,13 @@ int main(void)
 	initButtonPE3();
 	RTC_Configuration();
 	initTIM2();
+	dhtTim3Init();
 	initKomputer(&komp);
 
 	TM_HD44780_Init(16,2);
+
+	TM_HD44780_CreateChar(0,&charTermo[0]);
+	TM_HD44780_CreateChar(1,&charCelc[0]);
 
 
 	komp.aktualnyStan = Rozpoczecie;
@@ -259,7 +273,7 @@ int main(void)
 	Delayms(500);
 	komp.aktualnyStan = UstawianieGodziny;
 
-
+	int i = 0;
 	show(&komp);
     while(1)
     {
@@ -267,6 +281,11 @@ int main(void)
     	komp.obroty = getRPM(czasImpulsu);
     	RTC_GetDate(RTC_Format_BIN,&komp.data);
     	RTC_GetTime(RTC_Format_BIN,&komp.time);
+    	if(i>500000){
+    		dhtRead(&komp.humidity,&komp.tempOut,&komp.ChkSum);
+    		i=0;
+    	}
+    	i++;
     	show(&komp);
     	Delayms(10);
     }
