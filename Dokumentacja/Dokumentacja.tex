@@ -1,0 +1,228 @@
+\documentclass[a4paper,10pt,oneside]{book}
+\usepackage{standalone}
+\usepackage{suffix}
+\usepackage{ifthen}
+\usepackage{anysize}
+\setlength{\columnsep}{5mm}
+\marginsize{2.3cm}{2.3cm}{2cm}{1.7cm}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{indentfirst}
+\usepackage{marvosym}
+\usepackage{enumitem}
+\usepackage[final]{pdfpages}
+\usepackage[]{hyperref}
+\usepackage{array}
+\usepackage[ampersand]{easylist}
+\usepackage[section] {placeins}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\bookmarksetup
+{
+  numbered,
+  open
+}
+\usepackage{tabularx,ragged2e}
+\usepackage{color}
+\usepackage[nodayofweek]{datetime}
+\newdateformat{mydate}{\monthname[\THEMONTH] \THEYEAR}
+\usepackage{titlesec}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\pagenumbering{arabic}
+\renewcommand{\baselinestretch}{1.15}
+\lstset
+{
+  frame=tb,
+  language=C++,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  morekeywords={uint8_t,int8_t,uint16_t,int16_t,uint32_t,int32_t,friend,class,struct,string,int,std,boost,vector,map,list,queue,deque,array, shared_ptr,weak_ptr,nullptr,cout,cin},
+  numbers=left,
+  numbersep=10pt,
+  numberstyle=\tiny\color{mygray},
+  stepnumber=2,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3,
+}
+
+\makeatletter
+\renewcommand*{\thesection}{\arabic{section}}
+\renewcommand\section{\leftskip 0pt\@startsection {section}{1}{\z@}%
+                                   {-3.5ex \@plus -1ex \@minus -.2ex}%
+                                   {2.3ex \@plus.2ex}%
+                                   {\normalfont\Large\bfseries}}
+\renewcommand\subsection{\leftskip 0pt\@startsection{subsection}{2}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\large\bfseries\leftskip 4ex}}
+\newcommand\Xsubsubsection{\@startsection{subsubsection}{3}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\normalsize\bfseries\leftskip 8ex}}
+\renewcommand\subsubsection[1]{\Xsubsubsection{#1}\leftskip 3ex}
+\makeatother
+\renewcommand{\baselinestretch}{1.15}
+\renewcommand\tabularxcolumn[1]{>{\Centering}p{#1}}
+\setlist[description]{leftmargin=\parindent,labelindent=\parindent}
+\makeatletter
+% Save the original \part declaration
+\let\old@part\part
+
+% To that definition, add a new special starred version.
+\WithSuffix\def\part*{
+  % Handle the optional parameter.
+  \ifx\next[%
+    \let\next\thesis@part@star%
+  \else
+    \def\next{\thesis@part@star[]}%
+  \fi
+  \next}
+
+% The actual macro definition.
+\def\thesis@part@star[#1]#2{
+  \ifthenelse{\equal{#1}{}}
+   {% If the first argument isn’t given, default to the second one.
+    \def\thesis@part@short{#2}
+    % Insert the actual (unnumbered) \part header.
+    \old@part*{#2}}
+   {% Short name is given.
+    \def\thesis@part@short{#1}
+    % Insert the actual (unnumbered) \part header with short name.
+    \old@part*[#1]{#2}}
+
+  % Last, add the part to the table of contents. Use the short name, if provided.
+  \addcontentsline{toc}{part}{\thesis@part@short}
+}
+\makeatother
+
+\newcommand*{\justifyheading}{\centering}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\justifyheading}{\chaptertitlename\ \thechapter}
+  {20pt}{}  
+  [
+  \rule{8cm}{0.4pt}
+  ]
+\makeatletter
+\@addtoreset{chapter}{part}
+\makeatother 
+
+\begin{document}
+\begin{sloppypar}
+
+\begin{titlepage}
+\begin{center}
+% Upper part of the page. The '~' is needed because \\
+% only works if a paragraph has started.
+\includegraphics[width=0.15\textwidth]{./img/logo.jpg}~\\[1.3cm]
+\textsc{\LARGE Politechnika Poznańska}\\[4cm]
+\textsc{\Large Projekt zaliczeniowy z Podstaw Techniki Mikroprocesorowej}\\[0.1cm]
+% Title
+\rule{10cm}{0.4pt}\\[0.4cm]
+{ 
+	\huge \bfseries AutoControl - Samochodowy minikomputer pokładowy \\[0.35cm] 
+	\small Z wykorzystaniem STM32 \\[0.4cm] 
+}
+\rule{10cm}{0.4pt} \\[3.5cm]
+% Author and supervisor
+\noindent
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} 
+\large
+\emph{Autorzy:}
+\\ Damian Antczak
+\\ Szymon Kłebowski 
+\\ Michał Pietrzak 
+\end{flushleft}
+\end{minipage}%
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Prowadzacy:} 
+\\mgr~\textsc{Michał Nowicki} ~\\ ~\\ ~\\ ~\\ ~\\ ~\\ 
+\end{flushright}
+\end{minipage}
+\vfill
+% Bottom of the page
+{\large Czerwiec 2015}
+\end{center}
+\end{titlepage}
+
+\clearpage
+\pagenumbering{arabic}
+\tableofcontents
+
+\clearpage
+\vfill
+\huge
+
+	\addcontentsline{toc}{part}{Prolog}
+	\begin{center}
+	    \textbf{\\Prolog\\[1.3cm]}
+	\end{center}
+	\normalsize
+
+	\paragraph{Link do filmiku prezentujacego działanie: }
+		\underline{\href{http://google-styleguide.googlecode.com/svn/trunk/cppguide.html}{Kliknij, żeby obejrzeć}}
+	\paragraph{Link do GitHub'a: }
+		\underline{\href{http://google-styleguide.googlecode.com/svn/trunk/cppguide.html}{Kliknij, żeby otworzyć w przegladarce}}
+	\paragraph{Krótki wstep: }
+		Tutaj coś krótko opisać.
+  
+\clearpage
+\vfill
+\huge
+
+	\addcontentsline{toc}{part}{Troche szczegółów}
+	\begin{center}
+	    \textbf{\\Troche szczegółów\\[1.3cm]}
+	\end{center}
+	\normalsize
+	\paragraph{Coś tam}
+	Coś tam
+	
+	\paragraph{Coś tam}
+	Coś tam
+	
+	\paragraph{Coś tam}
+	Coś tam
+	\\[0.7cm]
+
+\clearpage
+\vfill
+\huge
+
+	\addcontentsline{toc}{part}{Podsumowanie}
+	\begin{center}
+	    \textbf{\\Podsumowanie\\[1.3cm]}
+	\end{center}
+	\normalsize
+	\paragraph{Coś tam}
+	Coś tam
+	
+	\paragraph{Coś tam}
+	Coś tam
+	
+	\paragraph{Coś tam}
+	Coś tam
+	\\[0.7cm]
+	
+\clearpage
+%\addcontentsline{toc}{part}{Appendix I  \small{coding style}}
+%\part*{Appendix I}
+%\includepdf[pages=-]{CodingStyle.pdf}
+
+\end{sloppypar}
+\end{document}

@@ -1,0 +1,13 @@
+\select@language {polish}
+\contentsline {part}{Prolog}{2}{chapter*.1}
+\contentsline {paragraph}{Link do filmiku prezentujacego dzia\IeC {\l }anie: }{2}{chapter*.1}
+\contentsline {paragraph}{Link do GitHub'a: }{2}{chapter*.1}
+\contentsline {paragraph}{Kr\IeC {\'o}tki wstep: }{2}{chapter*.1}
+\contentsline {part}{Troche szczeg\IeC {\'o}\IeC {\l }\IeC {\'o}w}{3}{chapter*.1}
+\contentsline {paragraph}{Co\IeC {\'s} tam}{3}{chapter*.1}
+\contentsline {paragraph}{Co\IeC {\'s} tam}{3}{chapter*.1}
+\contentsline {paragraph}{Co\IeC {\'s} tam}{3}{chapter*.1}
+\contentsline {part}{Podsumowanie}{4}{chapter*.1}
+\contentsline {paragraph}{Co\IeC {\'s} tam}{4}{chapter*.1}
+\contentsline {paragraph}{Co\IeC {\'s} tam}{4}{chapter*.1}
+\contentsline {paragraph}{Co\IeC {\'s} tam}{4}{chapter*.1}
