@@ -1,13 +1,12 @@
 \select@language {polish}
-\contentsline {part}{Prolog}{2}{chapter*.1}
-\contentsline {paragraph}{Link do filmiku prezentujacego dzia\IeC {\l }anie: }{2}{chapter*.1}
+\contentsline {part}{Wst\k ep}{2}{chapter*.1}
+\contentsline {paragraph}{Link do filmiku prezentuj\k acego dzia\IeC {\l }anie: }{2}{chapter*.1}
 \contentsline {paragraph}{Link do GitHub'a: }{2}{chapter*.1}
-\contentsline {paragraph}{Kr\IeC {\'o}tki wstep: }{2}{chapter*.1}
-\contentsline {part}{Troche szczeg\IeC {\'o}\IeC {\l }\IeC {\'o}w}{3}{chapter*.1}
-\contentsline {paragraph}{Co\IeC {\'s} tam}{3}{chapter*.1}
-\contentsline {paragraph}{Co\IeC {\'s} tam}{3}{chapter*.1}
-\contentsline {paragraph}{Co\IeC {\'s} tam}{3}{chapter*.1}
-\contentsline {part}{Podsumowanie}{4}{chapter*.1}
-\contentsline {paragraph}{Co\IeC {\'s} tam}{4}{chapter*.1}
-\contentsline {paragraph}{Co\IeC {\'s} tam}{4}{chapter*.1}
-\contentsline {paragraph}{Co\IeC {\'s} tam}{4}{chapter*.1}
+\contentsline {paragraph}{Kr\'otki wst\k ep\\ }{2}{chapter*.1}
+\contentsline {part}{Za\IeC {\l }o\.zenia projektu}{3}{chapter*.1}
+\contentsline {paragraph}{Funkcje}{3}{chapter*.1}
+\contentsline {paragraph}{Podzespo\IeC {\l }y planowane do u\.zycia}{3}{chapter*.1}
+\contentsline {part}{Dzia\IeC {\l }anie uk\IeC {\l }adu}{4}{chapter*.1}
+\contentsline {paragraph}{Ustawienie RTC\\}{4}{chapter*.1}
+\contentsline {paragraph}{Normalna praca uk\IeC {\l }adu\\}{4}{chapter*.1}
+\contentsline {paragraph}{Zdarzenia specjalne\\}{4}{chapter*.1}

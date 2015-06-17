@@ -6,7 +6,8 @@
 \setlength{\columnsep}{5mm}
 \marginsize{2.3cm}{2.3cm}{2cm}{1.7cm}
 \usepackage[polish]{babel}
-\usepackage[utf8]{inputenc}
+\usepackage[cp1250]{inputenc}
+\usepackage{polski}
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{color}
@@ -36,28 +37,7 @@
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 \pagenumbering{arabic}
 \renewcommand{\baselinestretch}{1.15}
-\lstset
-{
-  frame=tb,
-  language=C++,
-  aboveskip=3mm,
-  belowskip=3mm,
-  showstringspaces=false,
-  columns=flexible,
-  basicstyle={\small\ttfamily},
-  morekeywords={uint8_t,int8_t,uint16_t,int16_t,uint32_t,int32_t,friend,class,struct,string,int,std,boost,vector,map,list,queue,deque,array, shared_ptr,weak_ptr,nullptr,cout,cin},
-  numbers=left,
-  numbersep=10pt,
-  numberstyle=\tiny\color{mygray},
-  stepnumber=2,
-  numberstyle=\tiny\color{gray},
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
-  breaklines=true,
-  breakatwhitespace=true,
-  tabsize=3,
-}
+
 
 \makeatletter
 \renewcommand*{\thesection}{\arabic{section}}
@@ -95,7 +75,7 @@
 % The actual macro definition.
 \def\thesis@part@star[#1]#2{
   \ifthenelse{\equal{#1}{}}
-   {% If the first argument isnâ€™t given, default to the second one.
+   {% If the first argument isn’t given, default to the second one.
     \def\thesis@part@short{#2}
     % Insert the actual (unnumbered) \part header.
     \old@part*{#2}}
@@ -128,12 +108,12 @@
 % Upper part of the page. The '~' is needed because \\
 % only works if a paragraph has started.
 \includegraphics[width=0.15\textwidth]{./img/logo.jpg}~\\[1.3cm]
-\textsc{\LARGE Politechnika PoznaÅ„ska}\\[4cm]
+\textsc{\LARGE Politechnika Poznañska}\\[4cm]
 \textsc{\Large Projekt zaliczeniowy z Podstaw Techniki Mikroprocesorowej}\\[0.1cm]
 % Title
 \rule{10cm}{0.4pt}\\[0.4cm]
 { 
-	\huge \bfseries AutoControl - Samochodowy minikomputer pokÅ‚adowy \\[0.35cm] 
+	\huge \bfseries AutoControl - Samochodowy minikomputer pok³adowy \\[0.35cm] 
 	\small Z wykorzystaniem STM32 \\[0.4cm] 
 }
 \rule{10cm}{0.4pt} \\[3.5cm]
@@ -144,14 +124,14 @@
 \large
 \emph{Autorzy:}
 \\ Damian Antczak
-\\ Szymon KÅ‚ebowski 
-\\ MichaÅ‚ Pietrzak 
+\\ Szymon K³êbowski 
+\\ Micha³ Pietrzak 
 \end{flushleft}
 \end{minipage}%
 \begin{minipage}{0.4\textwidth}
 \begin{flushright} \large
-\emph{Prowadzacy:} 
-\\mgr~\textsc{MichaÅ‚ Nowicki} ~\\ ~\\ ~\\ ~\\ ~\\ ~\\ 
+\emph{Prowadz¹cy:} 
+\\mgr~\textsc{Micha³ Nowicki} ~\\ ~\\ ~\\ ~\\ ~\\ ~\\ 
 \end{flushright}
 \end{minipage}
 \vfill
@@ -168,55 +148,74 @@
 \vfill
 \huge
 
-	\addcontentsline{toc}{part}{Prolog}
+	\addcontentsline{toc}{part}{Wstêp}
 	\begin{center}
-	    \textbf{\\Prolog\\[1.3cm]}
+	    \textbf{\\Wstêp\\[1.3cm]}
 	\end{center}
 	\normalsize
 
-	\paragraph{Link do filmiku prezentujacego dziaÅ‚anie: }
-		\underline{\href{http://google-styleguide.googlecode.com/svn/trunk/cppguide.html}{Kliknij, Å¼eby obejrzeÄ‡}}
+	\paragraph{Link do filmiku prezentuj¹cego dzia³anie: }
+		\underline{\href{https://youtu.be/0Yy9RWy4AZM}{Kliknij, ¿eby obejrzeæ}}
 	\paragraph{Link do GitHub'a: }
-		\underline{\href{http://google-styleguide.googlecode.com/svn/trunk/cppguide.html}{Kliknij, Å¼eby otworzyÄ‡ w przegladarce}}
-	\paragraph{KrÃ³tki wstep: }
-		Tutaj coÅ› krÃ³tko opisaÄ‡.
+		\underline{\href{https://github.com/MrSmooku/PTM-.git}{Kliknij, ¿eby otworzyæ w przegl¹darce}}
+	\paragraph{Krótki wstêp\\ }
+		Postanowiliœmy, ¿e nasz projekt bêdzie dotyczy³ zminimalizowanego i z ograniczona liczba funkcji minikomputera pok³adowego, który w przysz³oœci móg³by zostaæ zainstalowany w samochodzie. Przewidywana jest dalsza praca nad projektem w celu rozbudowania go o dodatkowe funkcje.
   
 \clearpage
 \vfill
 \huge
 
-	\addcontentsline{toc}{part}{Troche szczegÃ³Å‚Ã³w}
+	\addcontentsline{toc}{part}{Za³o¿enia projektu}
 	\begin{center}
-	    \textbf{\\Troche szczegÃ³Å‚Ã³w\\[1.3cm]}
+	    \textbf{\\Za³o¿enia projektu\\[1.3cm]}
 	\end{center}
 	\normalsize
-	\paragraph{CoÅ› tam}
-	CoÅ› tam
+	\paragraph{Funkcje}
+	\begin{itemize}
+	\item Wyœwietlanie czasu i daty
+	\item Temperatura na zewn¹trz i wewn¹trz auta
+	\item Informacja o mo¿liwym oblodzeniu
+	\item Informacja graficzna o otwartych drzwiach (lewe, prawe, baga¿nik)
+	\item Obrotomierz stymulowany za pomoc¹ NE555
+	\item Informacja przypominaj¹c¹ o w³¹czeniu œwiate³
+	\item Automatyczny tryb nocny
+	\end{itemize}
 	
-	\paragraph{CoÅ› tam}
-	CoÅ› tam
+	\paragraph{Podzespo³y planowane do u¿ycia}
+	\begin{itemize}
+	\item wyœwietlacz graficzny LGMFD12232G6YLY
+	\item (lub) wyœwietlacz LCD Nokia 5110
+	\item czujnik temperatury DS18B20
+	\item czujnik temperatury i wilgotnoœci dht11
+	\item analogowy uk³ad na fototranzystorze do mierzenia intensywnoœci œwiat³a
+	\end{itemize}
 	
-	\paragraph{CoÅ› tam}
-	CoÅ› tam
-	\\[0.7cm]
+
 
 \clearpage
 \vfill
 \huge
 
-	\addcontentsline{toc}{part}{Podsumowanie}
+	\addcontentsline{toc}{part}{Dzia³anie uk³adu}
 	\begin{center}
-	    \textbf{\\Podsumowanie\\[1.3cm]}
+	    \textbf{\\Dzia³anie uk³adu\\[1.3cm]}
 	\end{center}
 	\normalsize
-	\paragraph{CoÅ› tam}
-	CoÅ› tam
+	\paragraph{Ustawienie RTC\\}
+	Po w³¹czeniu uk³adu w pierwszej fazie u¿ytkownik ma mo¿liwoœæ ustawienie aktualnej godziny, póŸniej uk³ad przechodzi w stan w którym ustawia siê aktualn¹ datê.
 	
-	\paragraph{CoÅ› tam}
-	CoÅ› tam
+	\paragraph{Normalna praca uk³adu\\}
+	Po ustawieniu czasu i daty uk³ad przechodzi do normalnego stanu pracy, w stan ten zaliczaj¹ siê:
+	-obrotomierz
+	Na ekranie wyœwietla siê aktualna iloœæ obrotów silnika.
+	-data i temperatura
 	
-	\paragraph{CoÅ› tam}
-	CoÅ› tam
+	\paragraph{Zdarzenia specjalne\\}
+	Normaln¹ pracê uk³adu przerywaj¹ zdarzenie, w projekcie wystêpuj¹ trzy takie zdarzenia: 
+	-lewe drzwi otwarte,
+	-prawe drzwi otwarte,
+	-baga¿nik otwarty.
+	W tych stanach na wyœwietlaczu pojawia siê informacja np."Lewe drzwi otwarte" i ikonka otwarcia drzwi.
 	\\[0.7cm]
 	
 \clearpage
