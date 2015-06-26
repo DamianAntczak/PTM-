@@ -10,3 +10,4 @@
 \contentsline {paragraph}{Ustawienie RTC\\}{4}{chapter*.1}
 \contentsline {paragraph}{Normalna praca uk\IeC {\l }adu\\}{4}{chapter*.1}
 \contentsline {paragraph}{Zdarzenia specjalne\\}{4}{chapter*.1}
+\contentsline {paragraph}{Uproszczony graf wewn\k etrznych stan\'ow uk\IeC {\l }adu:\\}{4}{chapter*.1}

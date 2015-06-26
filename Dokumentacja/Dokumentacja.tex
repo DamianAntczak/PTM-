@@ -22,6 +22,7 @@
 \usepackage{listings}
 \usepackage{hyperref}
 \usepackage{bookmark}
+ 
 \bookmarksetup
 {
   numbered,
@@ -211,8 +212,63 @@
 	-lewe drzwi otwarte,
 	-prawe drzwi otwarte,
 	-baga¿nik otwarty.
-	W tych stanach na wyœwietlaczu pojawia siê informacja np."Lewe drzwi otwarte" i ikonka otwarcia drzwi.
-	\\[0.7cm]
+	W tych stanach na wyœwietlaczu pojawia siê informacja np. "Lewe drzwi otwarte" i ikonka otwarcia drzwi.
+	
+	\paragraph{Uproszczony graf wewnêtrznych stanów uk³adu:\\}	
+	\includegraphics[width=1\textwidth]{./img/Graf.JPG}
+	\\
+	b – przycisk „User Button”\\
+	t – czas\\
+	p – przerwanie od drzwi lub baga¿nika\\
+	\\
+	\textbf{Stan 1:} Podczas trwania tego stanu na wyœwietlaczu wyœwietla siê animacja z nazw¹ projektu, po up³ywie
+	pewnego czasu program przechodzi w kolejny stan.\\
+	\textbf{Stan 2:} W tym stanie u¿ytkownik ustawia odpowiedni¹ godzinê i datê, przejœcia pomiêdzy ustawianiami
+	powoduje u¿ytkownik przyciskiem „User Button”, a zmiany wartoœci konkretnych zmiennych
+	przyciskiem „Change Button”.\\
+	\textbf{Stan 3:} W stanie tym nastêpuj zapisanie do RTC ustawionych wartoœci dla czasu i daty, na wyœwietlaczu
+	wyœwietla siê informacja: ;\\
+	\textbf{Stan 4:} Na wyœwietlaczu pokazywane s¹ aktualna data i godzina, oraz temperatura i wilgotnoœæ;\\
+	\textbf{Stan 5:} Informacja o aktualnej prêdkoœci obrotowej silnika w RPM oraz pasek w którym ka¿da 'pe³na'
+	czcionka symbolizuje 1 000 RPM.
+	Iloœæ obrotów mierzona jest przez uk³ad stm32 za pomoc¹ zliczania okresu pomiêdzy kolejnymi
+	impulsami sygna³u prostok¹tnego. W przerwaniu zewnêtrznym nastêpuje uruchamianie timera,
+	który liczy ten czas.
+	\newpage
+	
+	Przerwanie zewnêtrzne:
+	\begin{lstlisting}
+	void EXTI1_IRQHandler(void) 
+	{
+		/* Make sure that interrupt flag is set */
+		if (EXTI_GetITStatus(EXTI_Line1) != RESET) 
+		{
+			/* Do your stuff when PD0 is changed */
+			if(nrZbocza==0)
+			{
+				TIM2->CNT = 0;
+				TIM_Cmd(TIM2, ENABLE);
+				nrZbocza=1;
+			}
+			else
+			{
+				czasImpulsu= TIM2->CNT;
+				TIM_Cmd(TIM2, DISABLE);
+				nrZbocza=0;
+			}
+			/* Clear interrupt flag */
+			EXTI_ClearITPendingBit(EXTI_Line1);
+		}
+	}
+	\end{lstlisting}
+	
+	
+	\textbf{\\Stan 6:} Do stanu tego program wchodzi pod wp³ywem przerwañ generowanych przez zbocza narastaj¹ce na
+	pinach …. . Piny te gdy s¹ podpiête w samochodzie do instalacji oœwietleniowej w kabinie i
+	baga¿niku przez uk³ad z diod¹ zenera sygnalizuj¹ otwarcie drzwi b¹dŸ baga¿nika. Na wyœwietlaczu
+	ukazuje siê informacja np.”Baga¿nik otwarty”. Przejœcie do tego stanu mo¿liwe jest jedynie ze
+	stanu 4 lub 6.
+	
 	
 \clearpage
 %\addcontentsline{toc}{part}{Appendix I  \small{coding style}}
